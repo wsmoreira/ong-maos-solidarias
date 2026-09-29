@@ -25,12 +25,15 @@ Projeto desenvolvido na disciplina de **Desenvolvimento Front-end** do curso de 
 - CSS3 (variáveis, Grid, Flexbox e media queries)
 - JavaScript (ES6 Modules), sem frameworks
 - [Day.js](https://day.js.org/) 1.11.13, carregada pela CDN jsDelivr
+- [Vite](https://vite.dev/) 8 e html-minifier-terser, usados só no build de produção
 
 ## Estrutura de pastas
 
 ```
 ong/
 ├── index.html            # redireciona para html/index.html
+├── package.json          # scripts e dependências do build
+├── vite.config.js        # configuração do build de produção
 ├── html/
 │   └── index.html        # página única da aplicação (SPA)
 ├── css/
@@ -53,6 +56,13 @@ ong/
         └── acessibilidade.js # alto contraste e link "Ir para o conteúdo"
 ```
 
+## Pré-requisitos
+
+- Navegador atualizado (Chrome, Edge, Firefox ou Safari)
+- [Git](https://git-scm.com/), para clonar o repositório
+- [VS Code](https://code.visualstudio.com/) com a extensão Live Server, ou Python 3
+- [Node.js](https://nodejs.org/) 20.19 ou mais novo, **apenas** para gerar o build de produção
+
 ## Como executar
 
 O JavaScript usa módulos (`type="module"`), por isso o projeto **precisa ser aberto por um servidor**. Abrir o arquivo com dois cliques não funciona.
@@ -74,6 +84,37 @@ python -m http.server 5500
 ```
 
 Depois, acesse `http://localhost:5500` no navegador.
+
+## Build de produção
+
+O build junta os módulos JavaScript em um único arquivo, minifica o CSS, o JavaScript e o HTML e gera a pasta `dist/`, pronta para publicar.
+
+```bash
+npm install        # instala o Vite (só na primeira vez)
+npm run build      # gera a pasta dist/
+npm run preview    # abre a versão de produção no navegador para conferir
+```
+
+O que a configuração (`vite.config.js`) faz:
+
+- usa `html/index.html` e o `index.html` da raiz como pontos de entrada;
+- usa caminhos relativos (`base: './'`), para funcionar no endereço do GitHub Pages;
+- copia a pasta `imagens/` sem os `.png`, que o site não usa;
+- minifica o HTML com o html-minifier-terser.
+
+Resultado: o código passou de **67,3 KB para 37,4 KB (−44%)**. Com a compressão gzip do servidor, são transferidos cerca de **11,5 KB**. As pastas `dist/` e `node_modules/` não vão para o repositório (`.gitignore`).
+
+## Testes
+
+Os testes são manuais, feitos a cada nova funcionalidade:
+
+- **HTML e CSS:** [W3C Validator](https://validator.w3.org/), sem erros.
+- **Acessibilidade:** auditoria com axe-core (mesma base do Lighthouse), regras WCAG 2.1 A e AA, sem violações nas três páginas, no computador e no celular, nos modos normal e alto contraste.
+- **Contraste:** todos os pares de cores acima de 4,5:1, calculados pela fórmula da WCAG (podem ser conferidos no [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)).
+- **Teclado:** navegação completa com `Tab`, `Enter`, `Espaço` e `Esc`.
+- **Formulário:** envio vazio, CPF inválido (`111.111.111-11`), CPF repetido, data no futuro, rascunho após recarregar a página e envio completo.
+- **Falha da CDN:** com a Day.js bloqueada no DevTools (aba Network), o site continua funcionando.
+- **Build:** a pasta `dist/` é testada com `npm run preview`, repetindo os testes acima.
 
 ## Como usar
 
