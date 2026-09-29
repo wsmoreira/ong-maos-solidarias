@@ -14,8 +14,10 @@ let dayjs = null;
 
 export async function carregarBibliotecaDatas() {
     try {
-        const modulo = await import(URL_DAYJS);
-        const idioma = await import(URL_IDIOMA);
+        // /* @vite-ignore */ avisa o Vite para não tentar empacotar a biblioteca:
+        // ela continua vindo da CDN, e o import acontece só no navegador
+        const modulo = await import(/* @vite-ignore */ URL_DAYJS);
+        const idioma = await import(/* @vite-ignore */ URL_IDIOMA);
 
         dayjs = modulo.default;
         dayjs.locale(idioma.default); // nomes de meses e dias em português
