@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mãos Solidárias</title>
+    <!-- Ícone da aba vazio: evita o erro 404 do navegador procurando o favicon -->
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/styles.css">
     <!-- type="module" permite dividir o JavaScript em vários arquivos -->
@@ -13,18 +15,26 @@
 
     <!-- Cabeçalho fixo: é o mesmo em todas as "páginas" da SPA -->
     <header class="cabecalho">
+
+        <!-- Barra de acessibilidade (padrão do eMAG, usado em sites públicos brasileiros) -->
+        <div class="barra-acessibilidade">
+            <div class="container barra-acessibilidade-conteudo">
+                <a href="#conteudo" class="link-pular">Ir para o conteúdo</a>
+                <button type="button" id="botao-contraste" class="botao-contraste" aria-pressed="false">Alto contraste</button>
+            </div>
+        </div>
+
         <div class="container cabecalho-conteudo">
             <h1 class="logo">Instituto Mãos Solidárias</h1>
             <nav aria-label="Menu principal">
-                <!-- Checkbox escondido que controla o menu mobile -->
-                <input type="checkbox" id="menu-toggle" class="menu-toggle visualmente-oculto">
-                <label for="menu-toggle" class="menu-botao">
-                    <span class="icone-hamburguer"></span>
-                    <span class="visualmente-oculto">Abrir menu</span>
-                </label>
+                <!-- Botão do menu no celular: aria-expanded informa se o menu está aberto -->
+                <button type="button" class="menu-botao" aria-expanded="false" aria-controls="menu-principal">
+                    <span class="icone-hamburguer" aria-hidden="true"></span>
+                    <span class="visualmente-oculto">Menu</span>
+                </button>
 
                 <!-- Os links usam "#/" : o JavaScript lê o endereço e troca o conteúdo -->
-                <ul class="menu">
+                <ul class="menu" id="menu-principal">
                     <li><a href="#/inicio" data-rota="inicio">Início</a></li>
                     <li class="tem-submenu">
                         <a href="#/projetos" data-rota="projetos">Projetos</a>
@@ -41,7 +51,8 @@
     </header>
 
     <!-- Área que o JavaScript preenche com o template da página atual -->
-    <main id="conteudo" class="container">
+    <!-- tabindex="-1" permite que o link "Ir para o conteúdo" leve o foco até aqui -->
+    <main id="conteudo" class="container" tabindex="-1">
         <noscript>
             <p class="alerta alerta-aviso">
                 <strong>JavaScript desativado</strong>

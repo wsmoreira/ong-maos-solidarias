@@ -131,6 +131,17 @@ export function templateProjetos(listaProjetos) {
     `;
 }
 
+// Campo do formulário: rótulo, entrada e espaço para a mensagem de erro
+function templateCampo({ id, rotulo, tipo = 'text', colunas = 'col-12', extras = '' }) {
+    return `
+        <p class="campo ${colunas}">
+            <label for="${id}">${rotulo}</label>
+            <input type="${tipo}" id="${id}" name="${id}" aria-describedby="${id}-erro" ${extras} required>
+            <span class="mensagem-campo" id="${id}-erro"></span>
+        </p>
+    `;
+}
+
 export function templateCadastro(listaEstados) {
     const opcoesEstados = listaEstados
         .map((estado) => `<option value="${estado.sigla}">${estado.nome}</option>`)
@@ -147,57 +158,42 @@ export function templateCadastro(listaEstados) {
                 <button type="button" class="link-modal" data-abrir-modal="modal-privacidade">Por que pedimos seus dados?</button>
             </p>
 
-            <form id="form-cadastro" method="post">
+            <p class="alerta alerta-info" id="aviso-rascunho" hidden>
+                <strong>Continuando de onde você parou</strong>
+                Recuperamos os dados que você já tinha preenchido.
+            </p>
+
+            <!-- novalidate: a validação passa a ser feita pelo JavaScript (validacao.js) -->
+            <form id="form-cadastro" method="post" novalidate>
                 <fieldset>
                     <legend>Dados pessoais</legend>
                     <div class="grid">
-                        <p class="campo col-12">
-                            <label for="nome">Nome completo:</label>
-                            <input type="text" id="nome" name="nome" minlength="3" required>
-                        </p>
-                        <p class="campo col-12 col-md-6">
-                            <label for="email">E-mail:</label>
-                            <input type="email" id="email" name="email" placeholder="exemplo@email.com" required>
-                        </p>
-                        <p class="campo col-12 col-md-6">
-                            <label for="cpf">CPF:</label>
-                            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14"
-                                   pattern="\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}" title="Digite o CPF no formato 000.000.000-00" required>
-                        </p>
-                        <p class="campo col-12 col-md-6">
-                            <label for="telefone">Telefone:</label>
-                            <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" maxlength="15"
-                                   pattern="\\(\\d{2}\\) \\d{4,5}-\\d{4}" title="Digite o telefone no formato (00) 00000-0000" required>
-                        </p>
-                        <p class="campo col-12 col-md-6">
-                            <label for="nascimento">Data de nascimento:</label>
-                            <input type="date" id="nascimento" name="nascimento" required>
-                        </p>
+                        ${templateCampo({ id: 'nome', rotulo: 'Nome completo:', extras: 'minlength="3" autocomplete="name"' })}
+                        ${templateCampo({ id: 'email', rotulo: 'E-mail:', tipo: 'email', colunas: 'col-12 col-md-6',
+                            extras: 'placeholder="exemplo@email.com" autocomplete="email"' })}
+                        ${templateCampo({ id: 'cpf', rotulo: 'CPF:', colunas: 'col-12 col-md-6',
+                            extras: 'placeholder="000.000.000-00" maxlength="14" inputmode="numeric" data-mascara="cpf" pattern="\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"' })}
+                        ${templateCampo({ id: 'telefone', rotulo: 'Telefone:', tipo: 'tel', colunas: 'col-12 col-md-6',
+                            extras: 'placeholder="(00) 00000-0000" maxlength="15" data-mascara="telefone" autocomplete="tel" pattern="\\(\\d{2}\\) \\d{4,5}-\\d{4}"' })}
+                        ${templateCampo({ id: 'nascimento', rotulo: 'Data de nascimento:', tipo: 'date', colunas: 'col-12 col-md-6' })}
                     </div>
                 </fieldset>
 
                 <fieldset>
                     <legend>Endereço</legend>
                     <div class="grid">
-                        <p class="campo col-12 col-md-4">
-                            <label for="cep">CEP:</label>
-                            <input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9"
-                                   pattern="\\d{5}-\\d{3}" title="Digite o CEP no formato 00000-000" required>
-                        </p>
-                        <p class="campo col-12 col-md-8">
-                            <label for="endereco">Endereço:</label>
-                            <input type="text" id="endereco" name="endereco" placeholder="Rua, número e complemento" required>
-                        </p>
-                        <p class="campo col-12 col-md-8">
-                            <label for="cidade">Cidade:</label>
-                            <input type="text" id="cidade" name="cidade" required>
-                        </p>
+                        ${templateCampo({ id: 'cep', rotulo: 'CEP:', colunas: 'col-12 col-md-4',
+                            extras: 'placeholder="00000-000" maxlength="9" inputmode="numeric" data-mascara="cep" autocomplete="postal-code" pattern="\\d{5}-\\d{3}"' })}
+                        ${templateCampo({ id: 'endereco', rotulo: 'Endereço:', colunas: 'col-12 col-md-8',
+                            extras: 'placeholder="Rua, número e complemento" autocomplete="street-address"' })}
+                        ${templateCampo({ id: 'cidade', rotulo: 'Cidade:', colunas: 'col-12 col-md-8', extras: 'autocomplete="address-level2"' })}
                         <p class="campo col-12 col-md-4">
                             <label for="estado">Estado:</label>
-                            <select id="estado" name="estado" required>
+                            <select id="estado" name="estado" aria-describedby="estado-erro" required>
                                 <option value="">Selecione</option>
                                 ${opcoesEstados}
                             </select>
+                            <span class="mensagem-campo" id="estado-erro"></span>
                         </p>
                     </div>
                 </fieldset>
@@ -206,14 +202,15 @@ export function templateCadastro(listaEstados) {
                     <legend>Forma de participação</legend>
                     <div class="opcoes">
                         <p>
-                            <input type="radio" id="doador" name="participacao" value="doador" required>
+                            <input type="radio" id="doador" name="participacao" value="doador" aria-describedby="participacao-erro" required>
                             <label for="doador">Quero ser doador</label>
                         </p>
                         <p>
-                            <input type="radio" id="voluntario" name="participacao" value="voluntario">
+                            <input type="radio" id="voluntario" name="participacao" value="voluntario" aria-describedby="participacao-erro">
                             <label for="voluntario">Quero ser voluntário</label>
                         </p>
                     </div>
+                    <p class="mensagem-campo" id="participacao-erro"></p>
                 </fieldset>
 
                 <div aria-live="polite">
@@ -223,9 +220,10 @@ export function templateCadastro(listaEstados) {
                         'Todos os campos foram preenchidos corretamente. Agora é só enviar.')}
                 </div>
 
-                <p>
+                <div class="acoes-formulario">
                     <button type="submit" class="botao">Enviar cadastro</button>
-                </p>
+                    <button type="button" class="botao botao-secundario" data-acao="limpar-formulario">Limpar formulário</button>
+                </div>
             </form>
         </section>
 

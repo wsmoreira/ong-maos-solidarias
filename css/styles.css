@@ -192,11 +192,53 @@ img {
     position: relative; /* referência para o menu mobile se posicionar */
     background-color: var(--cor-primaria);
     color: var(--cor-branco);
-    padding: var(--espaco-3) 0;
+}
+
+/* ---------- Barra de acessibilidade ---------- */
+.barra-acessibilidade {
+    background-color: var(--cor-primaria-escura);
+    font-size: var(--texto-pequeno);
+}
+
+.barra-acessibilidade-conteudo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--espaco-3);
+    padding-top: var(--espaco-1);
+    padding-bottom: var(--espaco-1);
+}
+
+.link-pular,
+.botao-contraste {
+    padding: var(--espaco-1) var(--espaco-2);
+    font-weight: 600;
+    color: var(--cor-branco);
+    border-radius: var(--borda-arredondada);
+}
+
+.botao-contraste {
+    background: none;
+    border: 1px solid var(--cor-branco);
+    cursor: pointer;
+}
+
+/* aria-pressed="true": o botão fica "aceso" enquanto o modo está ligado */
+.botao-contraste[aria-pressed="true"] {
+    background-color: var(--cor-branco);
+    color: var(--cor-primaria-escura);
+}
+
+.link-pular:focus-visible,
+.botao-contraste:focus-visible {
+    outline: 3px solid var(--cor-secundaria);
+    outline-offset: 2px;
 }
 
 /* Logo e navegação lado a lado, cada um em uma ponta (Flexbox) */
 .cabecalho-conteudo {
+    padding-top: var(--espaco-3);
+    padding-bottom: var(--espaco-3);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -226,6 +268,9 @@ img {
     justify-content: center;
     width: 44px;
     height: 44px;
+    padding: 0;
+    background: none;
+    border: none;
     border-radius: var(--borda-arredondada);
     cursor: pointer;
 }
@@ -257,21 +302,21 @@ img {
 .icone-hamburguer::after  { top: 8px; }
 
 /* Contorno visível quando o botão recebe foco pelo teclado */
-.menu-toggle:focus-visible + .menu-botao {
+.menu-botao:focus-visible {
     outline: 3px solid var(--cor-secundaria);
     outline-offset: 2px;
 }
 
-/* Quando o menu está aberto, o ícone vira um "X" */
-.menu-toggle:checked + .menu-botao .icone-hamburguer {
+/* aria-expanded="true" = menu aberto: o ícone vira um "X" */
+.menu-botao[aria-expanded="true"] .icone-hamburguer {
     background-color: transparent;
 }
 
-.menu-toggle:checked + .menu-botao .icone-hamburguer::before {
+.menu-botao[aria-expanded="true"] .icone-hamburguer::before {
     transform: translateY(8px) rotate(45deg);
 }
 
-.menu-toggle:checked + .menu-botao .icone-hamburguer::after {
+.menu-botao[aria-expanded="true"] .icone-hamburguer::after {
     transform: translateY(-8px) rotate(-45deg);
 }
 
@@ -294,8 +339,8 @@ img {
     transition: max-height 0.3s ease, padding 0.3s ease, visibility 0.3s;
 }
 
-/* Checkbox marcado = menu aberto */
-.menu-toggle:checked ~ .menu {
+/* Botão com aria-expanded="true" = menu aberto */
+.menu-botao[aria-expanded="true"] + .menu {
     max-height: 400px;
     padding: var(--espaco-2) var(--espaco-3) var(--espaco-3);
     visibility: visible;
@@ -400,6 +445,12 @@ img {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
+    }
+
+    /* Esc fecha o submenu mesmo com o mouse ou o foco ainda nele (WCAG 1.4.13) */
+    .tem-submenu.submenu-fechado .submenu {
+        opacity: 0;
+        visibility: hidden;
     }
 
     .submenu a {
@@ -555,26 +606,38 @@ select:focus {
    que ainda nem foi preenchido.
 */
 input:user-valid,
-select:user-valid {
+select:user-valid,
+input[aria-invalid="false"],
+select[aria-invalid="false"] {
     border-color: var(--cor-sucesso);
     background-color: var(--cor-sucesso-clara);
 }
 
 input:user-invalid,
-select:user-invalid {
+select:user-invalid,
+input[aria-invalid="true"],
+select[aria-invalid="true"] {
     border-color: var(--cor-erro);
     background-color: var(--cor-erro-clara);
 }
 
 /* Rótulo acompanha a cor do campo (não depende só da borda) */
-.campo:has(:user-invalid) label {
+.campo:has(:user-invalid) label,
+.campo:has([aria-invalid="true"]) label {
     color: var(--cor-erro);
 }
 
-.campo:has(:user-invalid) label::after {
-    content: " (verifique este campo)";
-    font-weight: 400;
+/* Mensagem de erro escrita pelo JavaScript embaixo do campo */
+.mensagem-campo {
+    display: block;
+    margin: var(--espaco-1) 0 0;
     font-size: var(--texto-pequeno);
+    font-weight: 600;
+    color: var(--cor-erro);
+}
+
+.mensagem-campo:empty {
+    display: none;
 }
 
 /* Botões de opção na cor da ONG */
@@ -630,6 +693,26 @@ input[type="radio"] {
 .botao:active {
     transform: scale(0.97);
     box-shadow: none;
+}
+
+/* Botão secundário: fundo branco e borda azul */
+.botao-secundario {
+    background-color: var(--cor-branco);
+    color: var(--cor-primaria);
+    border: 2px solid var(--cor-primaria);
+    box-shadow: none;
+}
+
+.botao-secundario:hover {
+    background-color: var(--cor-primaria-clara);
+    box-shadow: none;
+}
+
+/* Botões do formulário lado a lado */
+.acoes-formulario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espaco-3);
 }
 
 /* Desabilitado: cinza, sem sombra e sem reação ao mouse */
@@ -728,7 +811,7 @@ input[type="radio"] {
     display: none;
 }
 
-form:has(:user-invalid) .alerta-formulario.alerta-erro {
+form:has(:user-invalid, [aria-invalid="true"]) .alerta-formulario.alerta-erro {
     display: block;
 }
 
@@ -835,4 +918,114 @@ a.botao {
 
 .rodape p {
     margin: 0;
+}
+
+
+/* =========================================================
+   9. ACESSIBILIDADE
+   ========================================================= */
+
+/* Quem configurou o sistema para reduzir animações não vê transições */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+
+/*
+   Modo de alto contraste: ligado pelo botão da barra de acessibilidade.
+   O JavaScript coloca data-contraste="alto" na tag <html>, e as
+   variáveis do Design System passam a valer as cores abaixo.
+   Fundo preto, texto branco e destaques em amarelo.
+*/
+[data-contraste="alto"] {
+    --cor-primaria: #FFE600;
+    --cor-primaria-escura: #FFFFFF;
+    --cor-primaria-clara: #1A1A1A;
+    --cor-secundaria: #FFE600;
+    --cor-secundaria-clara: #1A1A1A;
+    --cor-sucesso: #5EE87A;
+    --cor-sucesso-clara: #0A1F0E;
+    --cor-erro: #FF7A7A;
+    --cor-erro-clara: #2A0B0B;
+    --cor-texto: #FFFFFF;
+    --cor-texto-suave: #E6E6E6;
+    --cor-borda: #FFFFFF;
+    --cor-fundo: #000000;
+    --cor-branco: #000000;
+    --sombra: none;
+    --sombra-forte: none;
+
+    /* Faz os controles nativos (calendário, seletor) usarem cores claras */
+    color-scheme: dark;
+}
+
+/* Cabeçalho preto com linha branca, em vez de fundo amarelo */
+[data-contraste="alto"] .cabecalho,
+[data-contraste="alto"] .barra-acessibilidade,
+[data-contraste="alto"] .menu {
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+[data-contraste="alto"] .cabecalho {
+    border-bottom: 2px solid #FFFFFF;
+}
+
+[data-contraste="alto"] .link-pular,
+[data-contraste="alto"] .botao-contraste,
+[data-contraste="alto"] .menu a {
+    color: #FFFFFF;
+}
+
+[data-contraste="alto"] .botao-contraste {
+    border-color: #FFFFFF;
+}
+
+/* Links do menu e botão ligado: amarelo com texto preto */
+[data-contraste="alto"] .botao-contraste[aria-pressed="true"],
+[data-contraste="alto"] .menu a:hover,
+[data-contraste="alto"] .menu a:focus-visible,
+[data-contraste="alto"] .menu a[aria-current="page"] {
+    background-color: #FFE600;
+    color: #000000;
+}
+
+[data-contraste="alto"] .icone-hamburguer,
+[data-contraste="alto"] .icone-hamburguer::before,
+[data-contraste="alto"] .icone-hamburguer::after {
+    background-color: #FFFFFF;
+}
+
+[data-contraste="alto"] .menu-botao[aria-expanded="true"] .icone-hamburguer {
+    background-color: transparent;
+}
+
+/* Blocos, cards e submenu ganham borda, já que as sombras somem */
+[data-contraste="alto"] .bloco,
+[data-contraste="alto"] .card,
+[data-contraste="alto"] .modal {
+    border: 1px solid #FFFFFF;
+}
+
+@media (min-width: 768px) {
+    [data-contraste="alto"] .submenu {
+        border: 1px solid #FFFFFF;
+    }
+}
+
+[data-contraste="alto"] input::placeholder {
+    color: #BFBFBF;
+}
+
+/* Mantém a faixa colorida de destaque no topo dos cards e do modal */
+[data-contraste="alto"] .card {
+    border-top: 4px solid var(--cor-secundaria);
+}
+
+[data-contraste="alto"] .modal {
+    border-top: 6px solid var(--cor-primaria);
 }
