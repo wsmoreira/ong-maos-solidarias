@@ -555,26 +555,38 @@ select:focus {
    que ainda nem foi preenchido.
 */
 input:user-valid,
-select:user-valid {
+select:user-valid,
+input[aria-invalid="false"],
+select[aria-invalid="false"] {
     border-color: var(--cor-sucesso);
     background-color: var(--cor-sucesso-clara);
 }
 
 input:user-invalid,
-select:user-invalid {
+select:user-invalid,
+input[aria-invalid="true"],
+select[aria-invalid="true"] {
     border-color: var(--cor-erro);
     background-color: var(--cor-erro-clara);
 }
 
 /* Rótulo acompanha a cor do campo (não depende só da borda) */
-.campo:has(:user-invalid) label {
+.campo:has(:user-invalid) label,
+.campo:has([aria-invalid="true"]) label {
     color: var(--cor-erro);
 }
 
-.campo:has(:user-invalid) label::after {
-    content: " (verifique este campo)";
-    font-weight: 400;
+/* Mensagem de erro escrita pelo JavaScript embaixo do campo */
+.mensagem-campo {
+    display: block;
+    margin: var(--espaco-1) 0 0;
     font-size: var(--texto-pequeno);
+    font-weight: 600;
+    color: var(--cor-erro);
+}
+
+.mensagem-campo:empty {
+    display: none;
 }
 
 /* Botões de opção na cor da ONG */
@@ -630,6 +642,26 @@ input[type="radio"] {
 .botao:active {
     transform: scale(0.97);
     box-shadow: none;
+}
+
+/* Botão secundário: fundo branco e borda azul */
+.botao-secundario {
+    background-color: var(--cor-branco);
+    color: var(--cor-primaria);
+    border: 2px solid var(--cor-primaria);
+    box-shadow: none;
+}
+
+.botao-secundario:hover {
+    background-color: var(--cor-primaria-clara);
+    box-shadow: none;
+}
+
+/* Botões do formulário lado a lado */
+.acoes-formulario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espaco-3);
 }
 
 /* Desabilitado: cinza, sem sombra e sem reação ao mouse */
@@ -728,7 +760,7 @@ input[type="radio"] {
     display: none;
 }
 
-form:has(:user-invalid) .alerta-formulario.alerta-erro {
+form:has(:user-invalid, [aria-invalid="true"]) .alerta-formulario.alerta-erro {
     display: block;
 }
 
