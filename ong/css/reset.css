@@ -1,0 +1,37 @@
+/* =========================================================
+   Reset: remove diferenças de estilo entre navegadores.
+   É carregado antes do styles.css.
+   ========================================================= */
+
+/* Largura e altura passam a incluir a borda e o espaçamento interno */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Remove as margens padrão do navegador */
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+fieldset {
+    margin: 0;
+}
+
+/* Imagens nunca ultrapassam o espaço disponível */
+img,
+picture {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Campos e botões usam a mesma fonte da página */
+input,
+select,
+button {
+    font: inherit;
+}

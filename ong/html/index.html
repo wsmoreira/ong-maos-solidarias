@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mãos Solidárias</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- type="module" permite dividir o JavaScript em vários arquivos -->
+    <script type="module" src="../js/main.js"></script>
+</head>
+<body>
+
+    <!-- Cabeçalho fixo: é o mesmo em todas as "páginas" da SPA -->
+    <header class="cabecalho">
+        <div class="container cabecalho-conteudo">
+            <h1 class="logo">Instituto Mãos Solidárias</h1>
+            <nav aria-label="Menu principal">
+                <!-- Checkbox escondido que controla o menu mobile -->
+                <input type="checkbox" id="menu-toggle" class="menu-toggle visualmente-oculto">
+                <label for="menu-toggle" class="menu-botao">
+                    <span class="icone-hamburguer"></span>
+                    <span class="visualmente-oculto">Abrir menu</span>
+                </label>
+
+                <!-- Os links usam "#/" : o JavaScript lê o endereço e troca o conteúdo -->
+                <ul class="menu">
+                    <li><a href="#/inicio" data-rota="inicio">Início</a></li>
+                    <li class="tem-submenu">
+                        <a href="#/projetos" data-rota="projetos">Projetos</a>
+                        <ul class="submenu">
+                            <li><a href="#/projetos/projetos-sociais">Projetos sociais</a></li>
+                            <li><a href="#/projetos/voluntariado">Voluntariado</a></li>
+                            <li><a href="#/projetos/doacoes">Campanhas de doação</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#/cadastro" data-rota="cadastro">Cadastro</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Área que o JavaScript preenche com o template da página atual -->
+    <main id="conteudo" class="container">
+        <noscript>
+            <p class="alerta alerta-aviso">
+                <strong>JavaScript desativado</strong>
+                Este site precisa do JavaScript para funcionar. Ative-o nas configurações do navegador.
+            </p>
+        </noscript>
+    </main>
+
+    <!-- Rodapé fixo -->
+    <footer class="rodape">
+        <div class="container rodape-conteudo">
+            <p>Contato: contato@maossolidarias.org | (41) 3333-4444</p>
+            <p>&copy; 2026 Instituto Mãos Solidárias</p>
+        </div>
+    </footer>
+
+</body>
+</html>

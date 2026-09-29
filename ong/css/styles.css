@@ -1,5 +1,6 @@
 /* =========================================================
    Instituto Mãos Solidárias - Folha de estilos principal
+   (o reset.css é carregado antes deste arquivo)
    ========================================================= */
 
 
@@ -62,12 +63,7 @@
 /* =========================================================
    2. ESTILOS GLOBAIS
    ========================================================= */
-* {
-    box-sizing: border-box;
-}
-
 body {
-    margin: 0;
     font-family: var(--fonte-principal);
     font-size: var(--texto-base);
     line-height: var(--altura-linha);
@@ -103,11 +99,17 @@ a {
     color: var(--cor-primaria);
 }
 
-/* Imagens nunca ultrapassam o espaço disponível */
+/* Listas dentro do conteúdo */
+main ul {
+    margin-bottom: var(--espaco-3);
+}
+
+/* Títulos que recebem foco pelo JavaScript ao trocar de página */
+[tabindex="-1"]:focus {
+    outline: none;
+}
+
 img {
-    max-width: 100%;
-    height: auto;
-    display: block;
     border-radius: var(--borda-arredondada);
 }
 
@@ -735,43 +737,41 @@ form:valid .alerta-formulario.alerta-sucesso {
 }
 
 /* ---------- Modal ---------- */
-/* Fundo escuro que cobre a tela inteira, escondido por padrão */
+/* Usa o elemento <dialog>, aberto pelo JavaScript com showModal() */
 .modal {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--espaco-3);
-    background-color: rgba(31, 41, 51, 0.6);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s;
-}
-
-/* :target = o modal aparece quando o endereço termina com #id-do-modal */
-.modal:target {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Caixa branca com o conteúdo */
-.modal-conteudo {
-    position: relative;
-    width: 100%;
-    max-width: 520px;
+    width: min(520px, calc(100% - 2rem));
     padding: var(--espaco-5) var(--espaco-4) var(--espaco-4);
+    color: var(--cor-texto);
     background-color: var(--cor-branco);
+    border: none;
     border-top: 6px solid var(--cor-primaria);
     border-radius: var(--borda-arredondada);
     box-shadow: var(--sombra-forte);
-    transform: scale(0.95);
-    transition: transform 0.3s ease;
 }
 
-.modal:target .modal-conteudo {
-    transform: scale(1);
+/* Fundo escuro atrás do modal */
+.modal::backdrop {
+    background-color: rgba(31, 41, 51, 0.6);
+}
+
+/* Animação de entrada */
+.modal[open] {
+    animation: modal-entrada 0.3s ease;
+}
+
+@keyframes modal-entrada {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal form {
+    margin: 0;
 }
 
 /* Botão "X" no canto */
@@ -787,8 +787,10 @@ form:valid .alerta-formulario.alerta-sucesso {
     font-size: var(--texto-grande);
     line-height: 1;
     color: var(--cor-texto-suave);
-    text-decoration: none;
+    background: none;
+    border: none;
     border-radius: var(--borda-arredondada);
+    cursor: pointer;
 }
 
 .modal-fechar:hover,
@@ -797,9 +799,15 @@ form:valid .alerta-formulario.alerta-sucesso {
     color: var(--cor-texto);
 }
 
-/* Link que abre o modal */
+/* Botão com aparência de link, que abre o modal */
 .link-modal {
+    padding: 0;
     font-weight: 600;
+    color: var(--cor-primaria);
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
 /* Um link com aparência de botão */
