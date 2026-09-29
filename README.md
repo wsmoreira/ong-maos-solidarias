@@ -2,6 +2,8 @@
 
 Plataforma web de uma ONG fictícia que apresenta seus projetos sociais e permite o cadastro de doadores e voluntários.
 
+**Site publicado:** https://wsmoreira.github.io/ong-maos-solidarias/
+
 Projeto desenvolvido na disciplina de **Desenvolvimento Front-end** do curso de Análise e Desenvolvimento de Sistemas (Universidade Positivo), ao longo de quatro experiências práticas: HTML semântico, CSS, JavaScript e fluxo profissional (Git, acessibilidade e deploy).
 
 ---
@@ -31,6 +33,9 @@ Projeto desenvolvido na disciplina de **Desenvolvimento Front-end** do curso de 
 
 ```
 ong/
+├── .github/workflows/
+│   └── deploy.yml        # CI/CD: build e publicação no GitHub Pages
+├── CHANGELOG.md          # histórico de versões
 ├── index.html            # redireciona para html/index.html
 ├── package.json          # scripts e dependências do build
 ├── vite.config.js        # configuração do build de produção
@@ -103,6 +108,17 @@ O que a configuração (`vite.config.js`) faz:
 - minifica o HTML com o html-minifier-terser.
 
 Resultado: o código passou de **67,3 KB para 37,4 KB (−44%)**. Com a compressão gzip do servidor, são transferidos cerca de **11,5 KB**. As pastas `dist/` e `node_modules/` não vão para o repositório (`.gitignore`).
+
+## Deploy (CI/CD)
+
+O site é publicado no **GitHub Pages** por um workflow do **GitHub Actions** (`.github/workflows/deploy.yml`). A cada push na branch `main`:
+
+1. o GitHub baixa o código e instala o Node.js 22;
+2. roda `npm ci`, que instala as versões exatas do `package-lock.json`;
+3. roda `npm run build`, que gera a pasta `dist/`;
+4. publica a pasta `dist/` no GitHub Pages.
+
+O andamento de cada publicação aparece na aba **Actions** do repositório. Para configurar em um repositório novo, vá em **Settings → Pages → Source** e escolha **GitHub Actions**.
 
 ## Testes
 
