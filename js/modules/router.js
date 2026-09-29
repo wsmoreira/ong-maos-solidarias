@@ -13,6 +13,7 @@ import {
     templateNaoEncontrada
 } from './templates.js';
 import { restaurarRascunho } from './formulario.js';
+import { fecharMenu } from './menu.js';
 
 // Cada rota tem um título (para a aba do navegador), uma função que gera o HTML
 // e, se precisar, uma função "depois" que roda quando o HTML já está na tela
@@ -24,6 +25,11 @@ const rotas = {
 
 // Transforma "#/projetos/voluntariado" em { pagina: 'projetos', secao: 'voluntariado' }
 function lerEndereco() {
+    // Endereços que não começam com "#/" não são rotas: mostra o início
+    if (!window.location.hash.startsWith('#/')) {
+        return { pagina: 'inicio', secao: null };
+    }
+
     const partes = window.location.hash.replace('#/', '').split('/');
     return {
         pagina: partes[0] || 'inicio',
@@ -43,7 +49,7 @@ function atualizarMenu(pagina) {
         }
     });
 
-    document.querySelector('#menu-toggle').checked = false;
+    fecharMenu();
 }
 
 // Desenha a página atual dentro do <main>

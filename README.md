@@ -17,7 +17,7 @@ Projeto desenvolvido na disciplina de **Desenvolvimento Front-end** do curso de 
   - data de nascimento validada com a biblioteca Day.js.
 - **Armazenamento local:** cadastros e rascunho salvos no `localStorage`. Se a página for recarregada no meio do preenchimento, os dados voltam.
 - **Layout responsivo:** grid de 12 colunas com 5 breakpoints e menu hambúrguer no celular.
-- **Acessibilidade:** navegação por teclado, foco visível, contraste adequado e atributos ARIA.
+- **Acessibilidade (WCAG 2.1 nível AA):** modo de alto contraste, link para pular ao conteúdo, navegação completa por teclado e atributos ARIA.
 
 ## Tecnologias
 
@@ -49,7 +49,8 @@ ong/
         ├── armazenamento.js  # acesso ao localStorage
         ├── datas.js          # integração com a Day.js
         ├── modal.js          # abertura do modal
-        └── menu.js           # fechamento do menu com Esc
+        ├── menu.js           # menu hambúrguer e submenu (teclado e ARIA)
+        └── acessibilidade.js # alto contraste e link "Ir para o conteúdo"
 ```
 
 ## Como executar
@@ -86,8 +87,27 @@ Depois, acesse `http://localhost:5500` no navegador.
 |---|---|
 | `maos-solidarias:cadastros` | lista de cadastros enviados |
 | `maos-solidarias:rascunho` | formulário em preenchimento |
+| `maos-solidarias:alto-contraste` | preferência do modo de alto contraste |
 
 Para zerar os testes, apague essas chaves.
+
+## Acessibilidade
+
+O projeto segue as diretrizes **WCAG 2.1, nível AA**.
+
+- **Estrutura semântica:** landmarks `header`, `nav`, `main` e `footer`, um único `h1` e títulos em ordem.
+- **Barra de acessibilidade** no topo, no padrão do eMAG:
+  - **Ir para o conteúdo:** leva o foco direto ao conteúdo principal, sem passar pelo menu;
+  - **Alto contraste:** fundo preto, texto branco e destaques em amarelo. A escolha fica salva, e o modo liga sozinho se o sistema operacional pedir mais contraste.
+- **Teclado:** todos os elementos funcionam com `Tab`, `Enter` e `Esc`, com contorno de foco visível. O `Esc` fecha o menu, o submenu e o modal.
+- **ARIA:**
+  - `aria-expanded` no botão do menu;
+  - `aria-pressed` no botão de contraste;
+  - `aria-current` na página atual;
+  - `aria-invalid` e `aria-describedby` nos campos do formulário;
+  - `aria-live` nos avisos do formulário.
+- **Formulário:** cada campo tem rótulo, e os erros aparecem em texto, não só pela cor.
+- **Movimento:** as animações são desligadas quando o sistema pede menos movimento (`prefers-reduced-motion`).
 
 ## Manutenção
 
